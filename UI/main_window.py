@@ -3,7 +3,7 @@ from json import load, JSONDecodeError
 from math import pi
 
 from PyQt5.QtGui import QIntValidator, QDoubleValidator
-from PyQt5.QtWidgets import (QWidget, QTextEdit, QAction, QApplication, QPushButton, QMainWindow, QTabWidget, QVBoxLayout, QLabel,
+from PyQt5.QtWidgets import (QWidget, QTextEdit, QAction, QDesktopWidget, QApplication, QPushButton, QMainWindow, QTabWidget, QVBoxLayout, QLabel,
                              QGridLayout, QLineEdit, QFileDialog, QMessageBox)
 from PyQt5.QtGui import QIcon
 from matplotlib import pyplot
@@ -35,9 +35,28 @@ class Example(QMainWindow):
         toolbar = self.addToolBar('Exit')
         toolbar.addAction(exitAction)
 
-        self.setGeometry(300, 300, 350, 250)
+        self.setGeometry(500, 500, 550, 550)
+        self.center()
         self.setWindowTitle('Main window')
         self.show()
+
+    def closeEvent(self, event):
+
+        reply = QMessageBox.question(self, 'Message',
+                                     "Are you sure to quit?", QMessageBox.Yes |
+                                     QMessageBox.No, QMessageBox.No)
+
+        if reply == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
+
+    def center(self):
+
+        qr = self.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
 
 
 if __name__ == '__main__':
