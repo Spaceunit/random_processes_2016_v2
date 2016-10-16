@@ -36,3 +36,6 @@ class CheckHUD:
         self.critical = main_param['critical']
         self.p_value = main_param['p_value']
 
+    def checkstate(self):
+        print(True)
+
