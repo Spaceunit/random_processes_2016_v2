@@ -6,69 +6,63 @@ from Lab1.uniform_distribution import chud
 
 from PyQt5.QtGui import QFont
 from PyQt5.QtGui import QIntValidator, QDoubleValidator
-from PyQt5.QtWidgets import (QWidget, QTextEdit, QAction, QDesktopWidget, QApplication, QPushButton, QMainWindow, QTabWidget, QVBoxLayout, QLabel,
+from PyQt5.QtWidgets import (QWidget, QTextEdit, QAction, QDesktopWidget, QApplication, QPushButton, QMainWindow,
+                             QTabWidget, QVBoxLayout, QLabel,
                              QGridLayout, QLineEdit, QFileDialog, QMessageBox, QToolTip)
 from PyQt5.QtGui import QIcon
 from matplotlib import pyplot
 
-class Example(QMainWindow):
 
+class Example(QMainWindow):
     def __init__(self):
         super().__init__()
 
         self.initUI()
 
-
     def initUI(self):
+        self.sizeHint()
         self.setFont(QFont("Menlo", 14))
         QToolTip.setFont(QFont('Menlo', 14))
         self.statusBar().showMessage('Ready')
-        #textEdit = QTextEdit()
-        #self.setCentralWidget(textEdit)
-
-        exitAction = QAction(QIcon('icon/ic_exit_to_app_black_48dp_2x.png'), 'Exit', self)
-        exitAction.setShortcut('Ctrl+Q in Linux or Command+Q in MacOS')
-        exitAction.setStatusTip('Exit application')
-        exitAction.triggered.connect(self.close)
-
-        taskTab = QAction(QIcon('icon/ic_tab_black_24px.svg'), 'Tab1', self)
-        taskTab.setShortcut('Tab for task')
-        taskTab.setStatusTip('Go to task')
-        taskTab.triggered.connect(self.close)
-
-        lbl1 = QLabel('It is QLabel', self)
-        lbl1.move(15, 100)
-
         self.statusBar()
-
-        menubar = self.menuBar()
-        fileMenu = menubar.addMenu('&File')
-        fileMenu.addAction(exitAction)
-
-        toolbar = self.addToolBar('Exit')
-        toolbar.addAction(exitAction)
-        toolbar = self.addToolBar('Tab1')
-        toolbar.addAction(taskTab)
-
-        btn1 = QPushButton('Important Button', self)
-
-        btn1.setToolTip('This is a <b>QPushButton</b> widget')
-        btn1.resize(btn1.sizeHint())
-        btn1.move(50, 50)
-        btn1.clicked.connect(self.make_some)
-
         self.setGeometry(500, 500, 550, 550)
         self.center()
-        self.setWindowTitle('Main window')
+        self.setWindowTitle('Random processes 2016_v2 by Oleksiy Polshchak KM-42')
         self.setWindowIcon(QIcon('icon/ic_account_balance_black_24px.svg'))
+
+        #Building some buttons
+        tab1_button = self.create_new_button(0, 'icon/ic_tab_black_24px.svg', 'Lab1', 0, [25, 50], 'Open Lab #1', True)
+        tab2_button = self.create_new_button(0, 'icon/ic_tab_unselected_black_24px.svg', 'Lab2', 0, [125, 50],
+                                             'Open Lab #2', False)
+        tab3_button = self.create_new_button(0, 'icon/ic_tab_unselected_black_24px.svg', 'Lab3', 0, [225, 50],
+                                             'Open Lab #3', False)
+        tab4_button = self.create_new_button(0, 'icon/ic_tab_unselected_black_24px.svg', 'Lab4', 0, [325, 50],
+                                             'Open Lab #4', False)
+        tab2_button = self.create_new_button(0, 'icon/ic_tab_unselected_black_24px.svg', 'Lab5', 0, [425, 50],
+                                             'Open Lab #5', False)
+
+        self.center()
         self.show()
+
+    def create_new_button(self, connect_to, icon_src, button_label, button_size, button_pos, tool_tip, ED_status):
+        new_button = QPushButton(QIcon(icon_src), button_label, self)
+        if button_size == 0:
+            new_button.resize(new_button.sizeHint())
+        else:
+            new_button.resize(button_size[0], button_size[1])
+        new_button.move(button_pos[0], button_pos[1])
+        new_button.setToolTip(tool_tip)
+        if connect_to == 0:
+            pass
+        else:
+            new_button.clicked.connect(connect_to)
+        new_button.setEnabled(ED_status)
+        return new_button
 
     def closeEvent(self, event):
 
-        reply = QMessageBox.question(self, 'Message',
-                                     "Are you sure to quit?", QMessageBox.Yes |
-                                     QMessageBox.No, QMessageBox.No)
-
+        reply = QMessageBox.question(self, 'Message', "Are you sure to quit?", QMessageBox.Yes | QMessageBox.No,
+                                     QMessageBox.No)
 
         if reply == QMessageBox.Yes:
             event.accept()
@@ -86,15 +80,12 @@ class Example(QMainWindow):
         sender = self.sender()
         self.statusBar().showMessage(sender.text() + ' was pressed')
 
-    def make_some(self):
+    def make_some_think_or_just_klick(self):
         sender = self.sender()
         self.statusBar().showMessage(sender.text() + ' was pressed')
-        a = chud.CheckHUD(random_numbers=numpy.random.sample(500), count_intervals=10, confidence=0.95)
-        self.statusBar().showMessage(sender.text() + ': ' + str(a.critical))
 
 
 if __name__ == '__main__':
-
     app = QApplication(sys.argv)
     ex = Example()
     sys.exit(app.exec_())
